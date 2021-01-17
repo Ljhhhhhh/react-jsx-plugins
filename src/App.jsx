@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 // import { hot } from "react-hot-loader";
 
 // class App extends Component {
@@ -11,7 +11,7 @@ import React from "react";
 //   }
 // }
 
-const App = () => <h1 className="title" >hello jsx</h1>
+const App = <h1 className="title">hello jsx</h1>;
 
 export default App;
 // export default hot(module)(App);

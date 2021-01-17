@@ -23,7 +23,6 @@ module.exports = ((api, options) => {
 
   const visitor = helper({
     pre (state) {
-      console.log(state.tagName, 'tagName')
       const tagName = state.tagName;
       const args = state.args;
       if (t.react.isCompatTag(tagName)) {

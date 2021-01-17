@@ -32,6 +32,11 @@ const visitor = {
 
     console.log(callExpr, 'callExpr')
     path.replaceWith(callExpr);
+  },
+  JSXAttribute (path) {
+    if (t.isJSXElement(path.node.value)) {
+      path.node.value = t.jsxExpressionContainer(path.node.value);
+    }
   }
 }
 
