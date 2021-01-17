@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const jsxPlugin = require('./jsx/plugins')
 
 module.exports = {
   entry: "./src/index.js",
@@ -10,12 +11,12 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env"] }
+        options: {
+          presets: ["@babel/env"],
+          plugins: ['@babel/plugin-transform-react-jsx']
+          // plugins: [jsxPlugin]
+        }
       },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
     ]
   },
   resolve: { extensions: ["*", ".js", ".jsx"] },
