@@ -29,6 +29,8 @@ const visitor = {
 
     // 创建React.createElement(tag, attrs, ...chidren)表达式
     let callExpr = t.callExpression(createElement, [tag, attrNode, ...children]);
+
+    console.log(callExpr, 'callExpr')
     path.replaceWith(callExpr);
   }
 }
