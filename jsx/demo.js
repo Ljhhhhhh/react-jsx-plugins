@@ -1,14 +1,10 @@
 var parser = require('@babel/parser');
-
-const jsx = require("@babel/plugin-syntax-jsx").default;
-const helper = require("@babel/helper-builder-react-jsx").default;
-const { types: t } = require("@babel/core");
+const t = require("@babel/types");
 const generate = require("@babel/generator").default
-const babelCore = require('@babel/core');
 var traverse = require('@babel/traverse').default;
 
 const sourceCode = `<h1 className="title" >hello jsx</h1>`;
-// React.createElement("h1",{className: "title"},"hello jsx");
+// TODO: React.createElement("h1",{className: "title"},"hello jsx");
 
 const ast = parser.parse(sourceCode, {
   plugins: ['jsx']
@@ -16,12 +12,12 @@ const ast = parser.parse(sourceCode, {
 
 traverse(ast, {
   JSXElement (path) {
-    // 创建React.createElement
-    let createElement = t.memberExpression(t.identifier("React"), t.identifier("createElement"));
 
     let openingNode = path.get("openingElement").node;
-    // 获取tag
-    let tag = t.stringLiteral(openingNode.name.name);
+    // 获取标签名称
+    const tagName = openingNode.name.name;
+    // 设置标签节点
+    let tagNode = t.stringLiteral(tagName);
     // 获取attributes
     let properties = [];
     let attributes = openingNode.attributes;
@@ -40,8 +36,16 @@ traverse(ast, {
       children.push(t.stringLiteral(child.value));
     }
 
-    // 创建React.createElement(tag, attrs, ...chidren)表达式
-    let callExpr = t.callExpression(createElement, [tag, attrNode, ...children]);
+    // 创建React.createElement
+    let createElement = t.memberExpression(
+      t.identifier("React"),
+      t.identifier("createElement")
+    );
+
+    // 创建React.createElement(tagNode, attrs, ...chidren)表达式
+    let callExpr = t.callExpression(
+      createElement, [tagNode, attrNode, ...children]
+    );
     path.replaceWith(callExpr);
   }
 })

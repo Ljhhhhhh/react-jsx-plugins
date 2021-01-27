@@ -3,8 +3,6 @@ const pluginSyntaxJsx = require('@babel/plugin-syntax-jsx').default;
 
 const visitor = {
   JSXElement (path) {
-    // 创建React.createElement
-    let createElement = t.memberExpression(t.identifier("React"), t.identifier("createElement"));
 
     let openingNode = path.get("openingElement").node;
     // 获取tag
@@ -24,24 +22,31 @@ const visitor = {
 
     for (let i = 0; i < node.children.length; i++) {
       let child = node.children[i];
-      children.push(t.stringLiteral(child.value));
+      children.push(t.stringLiteral(child.value + '好帅'));
     }
+
+    // 创建React.createElement
+    let createElement = t.memberExpression(
+      t.identifier("React"),
+      t.identifier("createElement")
+    );
 
     // 创建React.createElement(tag, attrs, ...chidren)表达式
-    let callExpr = t.callExpression(createElement, [tag, attrNode, ...children]);
-
-    console.log(callExpr, 'callExpr')
+    let callExpr = t.callExpression(
+      createElement, [tag, attrNode, ...children]
+    );
     path.replaceWith(callExpr);
-  },
-  JSXAttribute (path) {
-    if (t.isJSXElement(path.node.value)) {
-      path.node.value = t.jsxExpressionContainer(path.node.value);
-    }
   }
 }
 
 module.exports = {
   name: "transform-react-jsx",
-  inherits: pluginSyntaxJsx,
+  inherits: pluginSyntaxJsx, // 功能等予 plugins: ['jsx]
   visitor
 }
+
+// module.exports = {
+//   name: "transform-react-jsx",
+//   inherits: xxx, // 继承插件
+//   visitor
+// }
